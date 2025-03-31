@@ -356,6 +356,58 @@ const CreateProducts = async (req, res) => {
     }
   };
 
+  const UpdateproductImage = async (req, res) => {
+    const image = req.file;
+    const { productid } = req.body;
+  
+    try {
+      if (!image) {
+        const error = new Error("Please upload a file");
+        error.status = 400;
+        throw error;
+      }
+  
+      // Fetch the existing product to get the current image path
+      const product = await Product.findOne({ where: { id: productid } });
+  
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+  
+      // Construct the full path to the existing image
+      const oldImagePath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        product.ImagePath
+      );
+  
+      // Remove the old image file
+      fs.unlink(oldImagePath, (err) => {
+        if (err) {
+          console.error("Error deleting the old image:", err);
+          return res
+            .status(500)
+            .json({ error: "Failed to delete the old image" });
+        }
+  
+        // Update the database with the new image path
+        Product.update(
+          { ImagePath: image.filename },
+          { where: { id: productid } }
+        )
+          .then(() => {
+            res.status(200).json({ message: "Record updated successfully" });
+          })
+          .catch((dbError) => {
+            res.status(500).json({ error: dbError.message });
+          });
+      });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
 
   const GetAllBranch = async (req, res) => {
     try {
@@ -392,5 +444,6 @@ const CreateProducts = async (req, res) => {
     GetProductsByPage,
     UpdateProductsQty,
     UpdateProductsSales,
-    DeleteRecord
+    DeleteRecord,
+    UpdateproductImage
   };
