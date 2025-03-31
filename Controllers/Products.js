@@ -1,4 +1,5 @@
 const { Product,ProductLedger, Branch, ProductBranch } = require("../Models/ProductsModel");
+const { Op } = require('sequelize');
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -216,6 +217,43 @@ const CreateProducts = async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   }
+
+  const SearchProducts = async (req, res) => {
+    try {
+      const search = req.params.search; 
+  
+      const PageNo = Number.parseInt(req.query.page)
+      const sizeNo = Number.parseInt(req.query.size)
+  
+      let page = 0
+  
+      if(!Number.isNaN(PageNo) && PageNo > 0){
+          page =PageNo
+      }
+  
+      let size =5
+      if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 400){
+          size = sizeNo
+      }
+  
+      const products = await Product.findAndCountAll({
+        order: [["createdAt", "DESC"]],
+  
+        where: {
+          Name: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        // This replaces the reverse() method
+        limit:size,
+        offset:page *size
+      });
+  
+      res.status(200).json(products.rows);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
 
   const UpdateProductsSales = async (req, res) => {
     const Name = req.params.Name;
@@ -445,5 +483,6 @@ const CreateProducts = async (req, res) => {
     UpdateProductsQty,
     UpdateProductsSales,
     DeleteRecord,
-    UpdateproductImage
+    UpdateproductImage,
+    SearchProducts 
   };

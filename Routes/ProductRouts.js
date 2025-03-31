@@ -8,7 +8,8 @@ const {
     UpdateProductsQty,
     UpdateProductsSales,
     DeleteRecord,
-    UpdateproductImage
+    UpdateproductImage,
+    SearchProducts
     
 } = require("../Controllers/Products")
 const express = require("express")
@@ -30,6 +31,8 @@ router.put("/ProQty/:id", UpdateProductsQty)
 router.put("/ProQtySales/:Name", UpdateProductsSales)
 
 router.put("/productsimg",upload.single('image'), UpdateproductImage)
+
+router.get('/Prosearch/:search', SearchProducts);
 
 
 router.delete("/products/:id",DeleteRecord)
