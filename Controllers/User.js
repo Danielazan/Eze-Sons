@@ -110,9 +110,9 @@ const {Branch} = require("../Models/ProductsModel")
             model: UserLedger
           },
         ],
-        order: [["createdAt", "DESC"]], // This replaces 
+        where: {UserName}
       },
-        {where: {username:UserName}}).then(result =>{
+        ).then(result =>{
         res.status(200).json(result)
       })
     } catch (error) {
