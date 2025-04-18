@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 
 async function deleteTable() {
     try {
-      await ProductLedger.drop();
+      await Product.drop();
       console.log("Table deleted successfully.");
     } catch (error) {
       console.error("Error deleting table:", error);
