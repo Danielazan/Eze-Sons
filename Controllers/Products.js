@@ -471,6 +471,20 @@ const CreateProducts = async (req, res) => {
     }
   };
 
+  const DeleteBranch = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const product = await Branch.destroy({
+        where: { id },
+        cascade: true,
+      }).then((result) => {
+        res.status(200).json({ message: "Record deleted successfully" });
+      });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+
 
 
   module.exports = {
@@ -484,5 +498,6 @@ const CreateProducts = async (req, res) => {
     UpdateProductsSales,
     DeleteRecord,
     UpdateproductImage,
-    SearchProducts 
+    SearchProducts ,
+    DeleteBranch
   };

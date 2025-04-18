@@ -9,7 +9,8 @@ const {
     UpdateProductsSales,
     DeleteRecord,
     UpdateproductImage,
-    SearchProducts
+    SearchProducts,
+    DeleteBranch
     
 } = require("../Controllers/Products")
 const express = require("express")
@@ -36,6 +37,8 @@ router.get('/Prosearch/:search', SearchProducts);
 
 
 router.delete("/products/:id",DeleteRecord)
+
+router.delete("/Branchdel/:id",DeleteBranch)
 
 
 module.exports = router
